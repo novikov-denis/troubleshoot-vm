@@ -102,11 +102,11 @@ git clone https://github.com/user/repo.git
 cd troubleshoot-vm-master
 
 # Выполнение скриптов по порядку
-sudo ./scripts/setup-system.sh
-sudo ./scripts/build-apps.sh
-sudo ./scripts/setup-storage.sh
-sudo ./scripts/install-apps.sh
-sudo ./scripts/break-system.sh
+sudo ./setup-system.sh
+sudo ./build-apps.sh
+sudo ./setup-storage.sh
+sudo ./install-apps.sh
+sudo ./break-system.sh
 ```
 
 ## Управление VM
@@ -152,7 +152,7 @@ sudo netstat -tulpn | grep :8080
 2. Убедитесь что SSH сервис запущен: `sudo systemctl start ssh`
 
 ### Скрипты не работают:
-1. Проверьте права: `chmod +x scripts/*.sh`
+1. Проверьте права: `chmod +x *.sh`
 2. Убедитесь в наличии sudo прав
 3. Проверьте логи: `journalctl -xe`
 

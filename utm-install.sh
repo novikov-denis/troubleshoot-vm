@@ -33,7 +33,7 @@ elif [ -d "/home/vagrant/troubleshoot-vm-master" ]; then
 elif [ -d "/home/ubuntu/troubleshoot-vm-master" ]; then
     # UTM окружение с пользователем ubuntu
     WORK_DIR="/home/ubuntu/troubleshoot-vm-master"
-elif [ -d "$(pwd)" ] && [ -f "scripts/setup-system.sh" ]; then
+elif [ -d "$(pwd)" ] && [ -f "setup-system.sh" ]; then
     # Текущая директория (если в ней есть scripts)
     WORK_DIR="$(pwd)"
 elif [ -d "./troubleshoot-vm-master" ]; then
@@ -46,7 +46,7 @@ else
     echo "  - /vagrant"
     echo "  - /home/vagrant/troubleshoot-vm-master"
     echo "  - /home/ubuntu/troubleshoot-vm-master"
-    echo "  - текущая директория (если содержит scripts/)"
+    echo "  - текущая директория (если содержит setup-system.sh)"
     exit 1
 fi
 
@@ -70,22 +70,22 @@ sudo apt-get install -y golang-1.20 build-essential parted lvm2 xfsprogs
 
 # Выполнение скриптов настройки
 status "Настройка прав доступа..."
-sudo chmod +x scripts/*.sh
+sudo chmod +x *.sh
 
 status "Выполнение setup-system.sh..."
-sudo ./scripts/setup-system.sh
+sudo ./setup-system.sh
 
 status "Выполнение build-apps.sh..."
-sudo ./scripts/build-apps.sh
+sudo ./build-apps.sh
 
 status "Выполнение setup-storage.sh..."
-sudo ./scripts/setup-storage.sh
+sudo ./setup-storage.sh
 
 status "Выполнение install-apps.sh..."
-sudo ./scripts/install-apps.sh
+sudo ./install-apps.sh
 
 status "Выполнение break-system.sh..."
-sudo ./scripts/break-system.sh
+sudo ./break-system.sh
 
 success "Настройка завершена!"
 echo ""

@@ -37,17 +37,17 @@ Vagrant.configure("2") do |config|
   SHELL
   
   # Компиляция Go приложений
-  config.vm.provision "shell", path: "scripts/build-apps.sh"
+  config.vm.provision "shell", path: "build-apps.sh"
   
   # Основная настройка системы
-  config.vm.provision "shell", path: "scripts/setup-system.sh"
+  config.vm.provision "shell", path: "setup-system.sh"
   
   # Настройка storage
-  config.vm.provision "shell", path: "scripts/setup-storage.sh"
+  config.vm.provision "shell", path: "setup-storage.sh"
   
   # Установка приложений
-  config.vm.provision "shell", path: "scripts/install-apps.sh"
+  config.vm.provision "shell", path: "install-apps.sh"
   
   # Сломать систему (в конце)
-  config.vm.provision "shell", path: "scripts/break-system.sh"
+  config.vm.provision "shell", path: "break-system.sh"
 end

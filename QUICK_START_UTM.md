@@ -102,7 +102,7 @@ open http://localhost:8080
 ```bash
 ssh -p 2222 vagrant@localhost
 sudo apt update && sudo apt upgrade -y
-# Далее выполните скрипты из scripts/
+# Далее выполните скрипты (.sh файлы)
 ```
 
 ## 📚 Документация

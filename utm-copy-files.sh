@@ -56,7 +56,7 @@ status "Копирование файлов проекта..."
 # Список файлов и папок для копирования
 FILES_TO_COPY=(
     "trouble-apps-go/"
-    "scripts/"
+    "*.sh"
     "ansible/"
     "utm-install.sh"
     "UTM_SETUP.md"
@@ -85,7 +85,7 @@ status "Настройка прав доступа..."
 ssh -p 2222 $VM_USER@localhost "
     cd /home/$VM_USER/troubleshoot-vm-master
     chmod +x utm-install.sh 2>/dev/null || true
-    chmod +x scripts/*.sh 2>/dev/null || true
+    chmod +x *.sh 2>/dev/null || true
 "
 
 success "Права настроены"
