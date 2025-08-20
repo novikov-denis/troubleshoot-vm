@@ -27,23 +27,28 @@ error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Проверка подключения к VM
-status "Проверка подключения к VM..."
+# Определение пользователя VM
+VM_USER="vagrant"
 if ! ssh -p 2222 -o ConnectTimeout=5 -o BatchMode=yes vagrant@localhost exit 2>/dev/null; then
-    error "Не удается подключиться к VM. Убедитесь что:"
-    echo "  1. VM запущена в UTM"
-    echo "  2. SSH сервер установлен и запущен"
-    echo "  3. Port forwarding настроен (Host 2222 → Guest 22)"
-    echo ""
-    echo "Попробуйте подключиться вручную:"
-    echo "  ssh -p 2222 vagrant@localhost"
-    exit 1
+    status "Пользователь vagrant недоступен, пробуем ubuntu..."
+    VM_USER="ubuntu"
+    if ! ssh -p 2222 -o ConnectTimeout=5 -o BatchMode=yes ubuntu@localhost exit 2>/dev/null; then
+        error "Не удается подключиться к VM. Убедитесь что:"
+        echo "  1. VM запущена в UTM"
+        echo "  2. SSH сервер установлен и запущен"
+        echo "  3. Port forwarding настроен (Host 2222 → Guest 22)"
+        echo ""
+        echo "Попробуйте подключиться вручную:"
+        echo "  ssh -p 2222 vagrant@localhost"
+        echo "  или: ssh -p 2222 ubuntu@localhost"
+        exit 1
+    fi
 fi
-success "Подключение к VM установлено"
+success "Подключение к VM установлено (пользователь: $VM_USER)"
 
 # Создание директории в VM
 status "Создание директории проекта в VM..."
-ssh -p 2222 vagrant@localhost "mkdir -p /home/vagrant/troubleshoot-vm-master"
+ssh -p 2222 $VM_USER@localhost "mkdir -p /home/$VM_USER/troubleshoot-vm-master"
 
 # Копирование файлов
 status "Копирование файлов проекта..."
@@ -67,7 +72,7 @@ FILES_TO_COPY=(
 for item in "${FILES_TO_COPY[@]}"; do
     if [ -e "$item" ]; then
         status "Копирование: $item"
-        scp -P 2222 -r "$item" vagrant@localhost:/home/vagrant/troubleshoot-vm-master/
+        scp -P 2222 -r "$item" $VM_USER@localhost:/home/$VM_USER/troubleshoot-vm-master/
     else
         warning "Файл не найден: $item"
     fi
@@ -77,8 +82,8 @@ success "Все файлы скопированы"
 
 # Настройка прав
 status "Настройка прав доступа..."
-ssh -p 2222 vagrant@localhost "
-    cd /home/vagrant/troubleshoot-vm-master
+ssh -p 2222 $VM_USER@localhost "
+    cd /home/$VM_USER/troubleshoot-vm-master
     chmod +x utm-install.sh 2>/dev/null || true
     chmod +x scripts/*.sh 2>/dev/null || true
 "
@@ -89,7 +94,7 @@ echo ""
 echo "✅ Копирование завершено!"
 echo ""
 echo "🔧 Следующий шаг - запуск автоматической настройки:"
-echo "   ssh -p 2222 vagrant@localhost"
+echo "   ssh -p 2222 $VM_USER@localhost"
 echo "   cd troubleshoot-vm-master"
 echo "   bash utm-install.sh"
 echo ""
@@ -99,11 +104,11 @@ echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     status "Запуск автоматической настройки..."
-    ssh -p 2222 vagrant@localhost "cd troubleshoot-vm-master && bash utm-install.sh"
+    ssh -p 2222 $VM_USER@localhost "cd troubleshoot-vm-master && bash utm-install.sh"
     success "Настройка завершена!"
     echo ""
     echo "🌐 Troubleshoot VM готова к использованию:"
-    echo "   SSH: ssh -p 2222 vagrant@localhost"
+    echo "   SSH: ssh -p 2222 $VM_USER@localhost"
     echo "   HTTP: http://localhost:8080"
 else
     echo "💡 Настройку можно запустить позже вручную"

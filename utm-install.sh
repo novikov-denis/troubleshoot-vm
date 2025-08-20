@@ -28,14 +28,25 @@ if [ -d "/vagrant" ]; then
     # Vagrant окружение
     WORK_DIR="/vagrant"
 elif [ -d "/home/vagrant/troubleshoot-vm-master" ]; then
-    # UTM окружение
+    # UTM окружение с пользователем vagrant
     WORK_DIR="/home/vagrant/troubleshoot-vm-master"
+elif [ -d "/home/ubuntu/troubleshoot-vm-master" ]; then
+    # UTM окружение с пользователем ubuntu
+    WORK_DIR="/home/ubuntu/troubleshoot-vm-master"
+elif [ -d "$(pwd)" ] && [ -f "scripts/setup-system.sh" ]; then
+    # Текущая директория (если в ней есть scripts)
+    WORK_DIR="$(pwd)"
 elif [ -d "./troubleshoot-vm-master" ]; then
-    # Текущая директория
+    # Поддиректория troubleshoot-vm-master
     WORK_DIR="./troubleshoot-vm-master"
 else
     error "Директория проекта не найдена!"
     echo "Убедитесь что файлы проекта скопированы в VM"
+    echo "Поддерживаемые пути:"
+    echo "  - /vagrant"
+    echo "  - /home/vagrant/troubleshoot-vm-master"
+    echo "  - /home/ubuntu/troubleshoot-vm-master"
+    echo "  - текущая директория (если содержит scripts/)"
     exit 1
 fi
 
