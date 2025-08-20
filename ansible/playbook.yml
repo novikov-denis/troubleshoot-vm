@@ -1,0 +1,16 @@
+---
+- name: Provision Troubleshooting Image
+  hosts: default
+  strategy: serverscom.mitogen.mitogen_linear
+  become: true
+  roles:
+    - storage
+    - trouble
+    - watcher
+    - echo
+    - badfs
+    - prepare
+    - nsswitch
+    - sources
+    - ulimit
+    - grub

@@ -1,0 +1,13 @@
+bin/
+ansible_collections
+service_account_key_file.json
+*.pem
+.venv/
+iso/
+disk.vdi
+*.iso
+*.vdi
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store

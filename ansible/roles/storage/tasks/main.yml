@@ -1,0 +1,44 @@
+---
+- name: Create third partition on /dev/vda
+  community.general.parted:
+    device: /dev/vda
+    number: 3
+    state: present
+    label: gpt
+    name: trouble
+    part_start: 8GiB
+    part_end: 100%
+    flags: [ lvm ]
+    align: optimal
+
+- name: Create opt volume group
+  community.general.lvg:
+    vg: opt
+    pvs: /dev/vda3
+
+- name: Create devops logical volume
+  community.general.lvol:
+    vg: opt
+    lv: devops
+    size: 100%FREE
+
+- name: Create xfs filesystem on devops logical volume
+  community.general.filesystem:
+    fstype: xfs
+    dev: /dev/opt/devops
+
+- name: Mount devops logical volume
+  ansible.posix.mount:
+    path: /opt/devops
+    src: /dev/opt/devops
+    fstype: xfs
+    state: mounted
+    opts: defaults
+
+- name: Create newflag
+  ansible.builtin.copy:
+      content: "FLAG: DOAUTOMATEREPEATE"
+      dest: /opt/devops/flag.txt
+      owner: root
+      group: root
+      mode: '0644'

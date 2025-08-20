@@ -1,0 +1,21 @@
+---
+- name: Copy grub config
+  ansible.builtin.copy:
+    src: etc/default/grub
+    dest: /etc/default/grub
+    owner: root
+    group: root
+    mode: '0644'
+  register: _grub_config
+
+- name: Update grub config
+  ansible.builtin.command:
+    argv:
+      - /usr/sbin/update-grub
+  when: _grub_config.changed
+
+- name: Break the grub
+  ansible.builtin.replace:
+    path: /boot/grub/grub.cfg
+    regexp: '/dev/vda'
+    replace: '/dev/sda'
